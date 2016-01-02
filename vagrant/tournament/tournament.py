@@ -15,7 +15,6 @@ def deleteMatches():
     """Remove all the match records from the database."""
     DB = connect()
     c = DB.cursor()
-    c.execute("delete from player_standing;")
     c.execute("delete from match;")
     DB.commit()
     DB.close()
@@ -74,7 +73,7 @@ def playerStandings():
     c.execute("select * from player_standing_vw;")
     #standing = [{'id': str(row[0]), 'name': str(row[1]), 'wins': int(row[2]), 'matches': int(row[3])} for row in c.fetchall()]
     standing = [(str(row[0]), str(row[1]), int(row[2]), int(row[3]),) for row in c.fetchall()]    
-    print standing
+    #print standing
     DB.close()
     return standing
 
@@ -87,8 +86,7 @@ def reportMatch(winner, loser):
     """
     DB = connect()
     c = DB.cursor()
-    c.execute("insert into match (first_player, second_player) values (%s, %s)", (winner,loser,))
-    c.execute("insert into player_standing (match_id, winner) select match_id, first_player from match where first_player = %s and second_player = %s", (winner, loser,)) 
+    c.execute("insert into match (winner, loser) values (%s, %s)", (winner,loser,))
     DB.commit()
     DB.close()
 
@@ -119,4 +117,4 @@ def swissPairings():
             continue
     return final_pairing
 
-    
+
